@@ -19,6 +19,7 @@ int** initboard() {
 }
 
 void printboard(int **board){
+    printf("\n|---|---|---|---|---|---|---|---|\n");
     for (int i = 0; i < 8; i++) {
         printf("| ");
         for (int j = 0; j < 8; j++) {
@@ -28,10 +29,12 @@ void printboard(int **board){
     }
 }
 
-
+int count = 0;
 void solve(int col, int **board){
 
     if(col == N){
+        count++;
+        printf("!!!!!!!!!!!!!!count: %i \n", count);
         printboard(board);
         return;
     }
@@ -50,7 +53,7 @@ void solve(int col, int **board){
 
 int safe(int row, int col, int **board){
     // Check this row on left side
-    for(int j=col; j>0; j--){
+    for(int j=col; j>=0; j--){
         if(board[row][j] == 1) return 0;
     }
     // Check upper diagonal on left side
@@ -67,5 +70,6 @@ int safe(int row, int col, int **board){
 
 int main(){
     int **b = initboard();
-    printboard(b);
+    solve(0, b);
+    printf("%i", count);
 }
