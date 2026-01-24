@@ -3,12 +3,23 @@
 #include <stdlib.h>
 #include "board.h"
 #include "safe.h"
+#include <sys/time.h>
+#include <time.h>
 
 #define N 8
 
+pthread_mutex_t print_lock = PTHREAD_MUTEX_INITIALIZER;
+
+long micro_seconds(const struct timespec *start, const struct timespec *stop) {
+    long sec  = stop->tv_sec  - start->tv_sec;
+    long nsec = stop->tv_nsec - start->tv_nsec;
+    return sec * 1000000L + nsec / 1000L;
+}
+
+
 int results[N];
-int **sols[N];
 int total = 0;
+
 
 typedef struct {
     int id;
@@ -28,8 +39,14 @@ void *solve(void *arg){
 
     if(col == N){
         results[id]+=1;
-        sols[id] = board;
+        
+        pthread_mutex_lock(&print_lock);
+        
         printf("I am thread %i with count %i \n", id, results[id]);
+        printboard(board);
+
+        pthread_mutex_unlock(&print_lock);
+
         return(NULL);
     }
 
@@ -47,6 +64,8 @@ void *solve(void *arg){
 }
 
 int main(){
+    struct timespec t_start, t_stop;
+
     solveArg **arg = malloc(N*sizeof(*arg));
 
     for(int i = 0; i < N; i++){
@@ -58,6 +77,7 @@ int main(){
         arg[i]->board[i][0] = 1;
     }
 
+    clock_gettime(CLOCK_MONOTONIC, &t_start);
 
     pthread_t tid[N];
     for(long i = 0; i < N; i++){ 
@@ -69,8 +89,9 @@ int main(){
         total += results[i];
     }
 
-    for(int i = 0; i < N; i++){
-         printboard(sols[i]);
-    }
+    clock_gettime(CLOCK_MONOTONIC, &t_stop);
+    long wall = micro_seconds(&t_start, &t_stop);
+
     printf("TOTAL SOLUTIONS: %i \n", total);
+    printf("WALL TIME: %ld microseconds\n", wall);
 }
