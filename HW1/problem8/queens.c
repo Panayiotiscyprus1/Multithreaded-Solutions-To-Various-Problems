@@ -7,6 +7,7 @@
 #define N 8
 
 int results[N];
+int **sols[N];
 int total = 0;
 
 typedef struct {
@@ -27,13 +28,12 @@ void *solve(void *arg){
 
     if(col == N){
         results[id]+=1;
+        sols[id] = board;
         printf("I am thread %i with count %i \n", id, results[id]);
-        printboard(board);
         return(NULL);
     }
 
-    
-    for(int r = row; r < N; r++){
+    for(int r = 0; r < N; r++){
         if (safe(r, col, board)){
             board[r][col] = 1;
             
@@ -52,9 +52,10 @@ int main(){
     for(int i = 0; i < N; i++){
         arg[i] = malloc(sizeof(*arg[i]));
         arg[i]->id = i;
-        arg[i]->col = 0;
+        arg[i]->col = 1;
         arg[i]->row = i;
         arg[i]->board = initboard();
+        arg[i]->board[i][0] = 1;
     }
 
 
@@ -68,5 +69,8 @@ int main(){
         total += results[i];
     }
 
-    printf("%i", total);
+    // for(int i = 0; i < N; i++){
+    //     printboard(sols[i]);
+    // }
+    printf("TOTAL SOLUTIONS: %i", total);
 }
