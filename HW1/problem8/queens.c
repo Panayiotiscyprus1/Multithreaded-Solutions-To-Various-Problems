@@ -11,7 +11,7 @@ void solve(int col, int **board){
 
     if(col == N){
         count++;
-        printf("!!!!!!!!!!!!!!count: %i \n", count);
+        printf("count: %i \n", count);
         printboard(board);
         return;
     }
