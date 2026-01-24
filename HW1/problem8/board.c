@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 int** initboard() {
     int **board = malloc(8 * sizeof(int*));
 
