@@ -69,8 +69,8 @@ int main(){
         total += results[i];
     }
 
-    // for(int i = 0; i < N; i++){
-    //     printboard(sols[i]);
-    // }
-    printf("TOTAL SOLUTIONS: %i", total);
+    for(int i = 0; i < N; i++){
+         printboard(sols[i]);
+    }
+    printf("TOTAL SOLUTIONS: %i \n", total);
 }
