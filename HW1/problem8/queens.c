@@ -3,19 +3,22 @@
 
 #define N 8
 
-void solve(int row, int col, int **board){
+void solve(int col, int **board){
 
-    if(row == N){
+    if(col == N){
         printboard();
         return;
     }
 
-    if safe(row){
-        board[row][col++] = 1;
-    }
+    for(int row = 0; row < N; row++){
+        if safe(row, col, board){
+            board[row][col] = 1;
 
-    solve(row+1, col, board);
-    board[row][col] = 0;
+            solve(col+1, board);
+            
+            board[row][col] = 0;
+        }
+    }
 
 
 }
