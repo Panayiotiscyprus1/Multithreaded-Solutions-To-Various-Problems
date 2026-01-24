@@ -50,6 +50,7 @@ int main(){
 
     for(int i = 0; i < N; i++){
         arg[i] = malloc(sizeof(*arg[i]));
+        arg[i]->id = i;
         arg[i]->col = 0;
         arg[i]->row = i;
         arg[i]->board = initboard();
