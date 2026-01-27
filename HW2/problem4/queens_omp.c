@@ -6,7 +6,7 @@
 #include "board.h"
 #include "safe.h"
 
-#define N 8
+#define N 10
 
 long micro_seconds(const struct timespec *start, const struct timespec *stop) {
     long sec  = stop->tv_sec  - start->tv_sec;

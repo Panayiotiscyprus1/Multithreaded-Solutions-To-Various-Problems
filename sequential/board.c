@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int** initboard() {
-    int **board = malloc(8 * sizeof(int*));
+#define N 10
 
-    for (int i = 0; i < 8; i++) {
-        board[i] = malloc(8 * sizeof(int));
-        for (int j = 0; j < 8; j++) {
+int** initboard() {
+    int **board = malloc(N * sizeof(int*));
+
+    for (int i = 0; i < N; i++) {
+        board[i] = malloc(N * sizeof(int));
+        for (int j = 0; j < N; j++) {
             board[i][j] = 0;  // initialize values
         }
     }
@@ -15,9 +17,9 @@ int** initboard() {
 
 void printboard(int **board){
     printf("\n|---|---|---|---|---|---|---|---|\n");
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < N; i++) {
         printf("| ");
-        for (int j = 0; j < 8; j++) {
+        for (int j = 0; j < N; j++) {
             if (board[i][j] == 1)
                 printf("♛ | ");
             else
