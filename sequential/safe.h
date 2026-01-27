@@ -1,0 +1,1 @@
+int safe(int row, int col, int **board);
