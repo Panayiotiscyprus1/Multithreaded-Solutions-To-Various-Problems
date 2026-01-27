@@ -19,13 +19,13 @@ int count = 0;
 void solve(int col, int **board){
     
     if(col == N){
-        #pragma omp critical
-        {
-            count++;
-            printf("\ncount: %i \n", count);
-            printboard(board);
-            return;
-        }
+        count++;
+            #pragma omp critical
+            {    
+                printf("\ncount: %i \n", count);
+                printboard(board);
+            }
+        return;
         
     }
 
@@ -42,13 +42,11 @@ void solve(int col, int **board){
 
 int main(){
     struct timespec t_start, t_stop;
+    clock_gettime(CLOCK_MONOTONIC, &t_start);
 
     #pragma omp parallel for reduction (+:count)
     for(int row = 0; row < N; row++){
         int **local_b = initboard();
-
-    clock_gettime(CLOCK_MONOTONIC, &t_start);
-
         local_b[row][0] = 1;
         solve(1, local_b);
     }
