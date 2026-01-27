@@ -15,6 +15,7 @@ int count = 0;
 void solve(int col, int **board){
     
     if(col == N){
+        #pragma omp atomic
         count++;
             // #pragma omp critical
             // {    
@@ -39,7 +40,7 @@ int main(){
     struct timespec t_start, t_stop;
     clock_gettime(CLOCK_MONOTONIC, &t_start);
 
-    #pragma omp parallel for reduction (+:count) schedule(dynamic,1)
+    #pragma omp parallel for reduction (+:count) 
     for(int row = 0; row < N; row++){
         int **local_b = initboard();
         local_b[row][0] = 1;
