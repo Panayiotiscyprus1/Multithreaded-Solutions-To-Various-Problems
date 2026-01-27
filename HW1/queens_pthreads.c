@@ -39,12 +39,12 @@ void *solve(void *arg){
     if(col == N){
         results[id]+=1;
         
-        pthread_mutex_lock(&print_lock);
+        // pthread_mutex_lock(&print_lock);
         
-        printf("\n I am thread %i with count %i \n", id, results[id]);
-        printboard(board);
+        // printf("\n I am thread %i with count %i \n", id, results[id]);
+        // printboard(board);
 
-        pthread_mutex_unlock(&print_lock);
+        // pthread_mutex_unlock(&print_lock);
 
         return(NULL);
     }
