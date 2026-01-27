@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <omp.h>
 #include <time.h>
@@ -19,11 +20,10 @@ void solve(int col, int **board){
     
     if(col == N){
         count++;
-            #pragma omp critical
-            {    
-                printf("\ncount: %i \n", count);
-                printboard(board);
-            }
+            // #pragma omp critical
+            // {    
+            //     printboard(board);
+            // }
         return;
         
     }

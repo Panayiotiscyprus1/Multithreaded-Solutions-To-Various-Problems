@@ -16,8 +16,8 @@ void solve(int col, int **board){
 
     if(col == N){
         count++;
-        printf("\ncount: %i \n", count);
-        printboard(board);
+        // printf("\ncount: %i \n", count);
+        // printboard(board);
         return;
     }
 
