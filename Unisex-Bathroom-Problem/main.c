@@ -3,11 +3,12 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include <unistd.h>
+#include <time.h>
 
 
 #define SHARED 0
-#define MEN 8
-#define WOMEN 4
+#define MEN 6
+#define WOMEN 6
 #define ITER 10
 
 void *Men(void *);
@@ -31,17 +32,15 @@ void *Men(void *arg){
 
         sem_wait(&q);
         sem_wait(&e);
-        if (nw>0){
+        if (nw>0 || dw >0){
             dm++;
             sem_post(&e);
             sem_post(&q);
             sem_wait(&m);
-        }else{
-            sem_post(&e);
-            sem_post(&q);
         }
 
-        sem_wait(&e);
+        sem_post(&q);
+        sem_post(&e);
         nm++;
         if (dm>0){
             dm--;
@@ -75,17 +74,15 @@ void *Women(void *arg){
 
         sem_wait(&q);
         sem_wait(&e);
-        if(nm > 0){
+        if(nm > 0 || dm>0){
             dw++;
             sem_post(&e);
             sem_post(&q);
             sem_wait(&w);
-        }else{
-            sem_post(&e);
-            sem_post(&q);
         }
 
-        sem_wait(&e);
+        sem_post(&q);
+        sem_post(&e);
         nw++;
         if(dw > 0){
             dw--;
@@ -113,6 +110,7 @@ void *Women(void *arg){
 }
 
 int main(){
+    srand(time(NULL));
     sem_init(&e, SHARED, 1);
     sem_init(&q, SHARED, 1);
     sem_init(&m, SHARED, 0);
