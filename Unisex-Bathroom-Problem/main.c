@@ -14,7 +14,32 @@ int dm, dw = 0;
 sem_t e, m, w;
 
 void *Men(void *arg){
+    while (1){
+        sem_wait(&e);
+        if (nw>0){
+            dm++;
+            sem_post(&e);
+            sem_wait(&m);
+        }
+        nm++;
+        if (dm>0){
+            dm--;
+            sem_post(&m);
+        } else {
+            sem_post(&e);
+        }
 
+        // Critical Section
+
+        sem_wait(&e);
+        nm--;
+        if (nm == 0 && dw > 0){
+            dw--;
+            sem_post(&w);
+        } else {
+            sem_post(&e);
+        }
+    }
 }
 
 void *Women(void *arg){
