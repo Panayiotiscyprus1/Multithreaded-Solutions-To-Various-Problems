@@ -39,6 +39,7 @@ void *Men(void *arg){
         }
 
         sem_post(&q);
+        sem_post(&e);
         nm++;
         if (dm>0){
             dm--;
@@ -80,6 +81,7 @@ void *Women(void *arg){
         }
 
         sem_post(&q);
+        sem_post(&e);
         nw++;
         if(dw > 0){
             dw--;
