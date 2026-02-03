@@ -9,6 +9,7 @@
 queens
 *.json
 .vscode
+main
 
 # Common build folders
 /build/
