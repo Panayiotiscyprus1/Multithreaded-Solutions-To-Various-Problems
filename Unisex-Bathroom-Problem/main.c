@@ -16,7 +16,7 @@ void *Women(void *);
 int nm, nw = 0;
 int dm, dw = 0;
 
-sem_t e, m, w;
+sem_t e, m, w, q;
 
 void delay(int min, int max){
     int t = min + rand()% (max-min+1);
@@ -29,12 +29,16 @@ void *Men(void *arg){
 
         delay(5,10); // waiting to need to go to the bathroom again
 
+        sem_wait(&q);
         sem_wait(&e);
         if (nw>0){
             dm++;
             sem_post(&e);
+            sem_post(&q);
             sem_wait(&m);
         }
+
+        sem_post(&q);
         nm++;
         if (dm>0){
             dm--;
@@ -44,7 +48,7 @@ void *Men(void *arg){
         }
 
         printf("MAN   %2d  (inside: men=%d women=%d)\n", id, nm, nw);
-        fflush(stdout);
+        // fflush(stdout);
         delay(1,5); // do dis do dat, nootropia type shi
         
 
@@ -66,12 +70,16 @@ void *Women(void *arg){
         int id = *((int *) arg);
         delay(5,10); // waiting to need to go to the bathroom again
 
+        sem_wait(&q);
         sem_wait(&e);
         if(nm > 0){
             dw++;
             sem_post(&e);
+            sem_post(&q);
             sem_wait(&w);
         }
+
+        sem_post(&q);
         nw++;
         if(dw > 0){
             dw--;
@@ -82,7 +90,7 @@ void *Women(void *arg){
 
 
         printf("WOMAN %2d  (inside: men=%d women=%d)\n", id, nm, nw);
-        fflush(stdout);
+        // fflush(stdout);
         delay(1,5); // do dis do dat, read a book (mega alexantro)
 
         sem_wait(&e);
@@ -100,6 +108,7 @@ void *Women(void *arg){
 
 int main(){
     sem_init(&e, SHARED, 1);
+    sem_init(&q, SHARED, 1);
     sem_init(&m, SHARED, 0);
     sem_init(&w, SHARED, 0);
 
