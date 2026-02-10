@@ -1,21 +1,20 @@
-class Table{
-    private boolean[] hungry = new boolean[5];
-    private boolean[] beingFed = new boolean[5];
+import java.util.*;
 
-    public synchronized requestToFeed(int personID){
-        if(beingFed[personID] == true){
+public class Table{
+
+    final int N=5;
+
+    private Queue<Integer> waitingQueue = new LinkedList<>();
+    private boolean[] beingFed = new boolean[N];
+
+
+    public synchronized requestToFeed(int feeder, int target){
+        
+        feedersQ.add(feeder);
+
+        while(feedersQ.peek != feeder || beingFed[target]){
             wait();
         }
-        if(hungry[personID] == false){
-            wait();
-        }else{
-            beingFed[personID] == true;
-        }
-
     }
 
-    public synchronized getPerson(){
-        // get someone from the queue of ppl waitin to eat
-        return personID
-    }
 }
