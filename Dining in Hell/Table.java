@@ -2,10 +2,10 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Table {
-    final int N = 5;
+    final int N = 6;
     private final Queue<Integer> waitingQueue = new LinkedList<>();
 
-    public void initTable() {
+    public Table() {
         for (int i = 0; i < N; i++) waitingQueue.add(i);
     }
 
@@ -13,14 +13,15 @@ public class Table {
         while (waitingQueue.peek() != null && waitingQueue.peek() == feeder) {
             wait();
         }
-        int target = waitingQueue.poll();   // take head (someone else)
-        notifyAll();                        // head changed -> wake waiters
+        
+        int target = waitingQueue.poll();
+        notifyAll(); // head changed -> wake waiters
         return target;
     }
 
     public void Feeding(int feeder, int target) throws InterruptedException {
         System.out.println("Thread " + feeder + " feeds thread " + target);
-        Thread.sleep(ThreadLocalRandom.current().nextInt(1000));
+        Thread.sleep(ThreadLocalRandom.current().nextInt(500, 3500));
     }
 
     public synchronized void Done(int target) {
