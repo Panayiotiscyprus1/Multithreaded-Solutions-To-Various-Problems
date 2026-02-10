@@ -6,6 +6,16 @@ class Table{
         if(beingFed[personID] == true){
             wait();
         }
-        
+        if(hungry[personID] == false){
+            wait();
+        }else{
+            beingFed[personID] == true;
+        }
+
+    }
+
+    public synchronized getPerson(){
+        // get someone from the queue of ppl waitin to eat
+        return personID
     }
 }
