@@ -12,10 +12,11 @@ public class Table{
 
     public synchronized Feed(int feeder){
         
-        while(waitingQueue.peek() == feeder){
+        while(waitingQueue.peek() != feeder){
             wait();
         }
 
+        waitingQueue.poll();
         System.out.println("Thread " + feeder + "feeds thread " + target);
         Thread.sleep(ThreadLocalRandom.current().nextInt(1000));
 
