@@ -5,16 +5,25 @@ public class Table{
     final int N=5;
 
     private Queue<Integer> waitingQueue = new LinkedList<>();
-    private boolean[] beingFed = new boolean[N];
 
+    public void initTable(){
+        for(int i = 0; i < 5; i++) waitingQueue.add(i);
+    }
 
-    public synchronized requestToFeed(int feeder, int target){
+    public synchronized Feed(int feeder){
         
-        feedersQ.add(feeder);
-
-        while(feedersQ.peek != feeder || beingFed[target]){
+        while(waitingQueue.peek() == feeder){
             wait();
         }
+
+        System.out.println("Thread " + feeder + "feeds thread " + target);
+        Thread.sleep(ThreadLocalRandom.current().nextInt(1000));
+
+    }
+
+    public synchronized Done(int feeder){
+        waitingQueue.add(feeder);
+        notifyAll();
     }
 
 }
