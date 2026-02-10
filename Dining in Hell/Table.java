@@ -1,21 +1,27 @@
-class Table{
-    private boolean[] hungry = new boolean[5];
-    private boolean[] beingFed = new boolean[5];
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+public class Table{
+
+    final int N=5;
+
+    private Deque<Integer> q = new ArrayDeque<>();
+    private boolean[] beingFed = new boolean[N];
+
+
 
     public synchronized requestToFeed(int personID){
         if(beingFed[personID] == true){
             wait();
-        }
-        if(hungry[personID] == false){
-            wait();
         }else{
-            beingFed[personID] == true;
+            try {
+                int person_id = q.removeFirst();
+                beingFed[personID] = true;
+            }catch (Exception e) {
+                System.out.println("queue is empty");
+            }
         }
 
     }
 
-    public synchronized getPerson(){
-        // get someone from the queue of ppl waitin to eat
-        return personID
-    }
 }
