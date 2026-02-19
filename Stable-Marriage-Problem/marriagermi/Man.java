@@ -7,16 +7,18 @@ import java.rmi.Naming;
 import java.rmi.Remote;
 
 public class Man extends UnicastRemoteObject implements manI {
+    final int N = Driver.N;
     public final int id;
-    public final int[] preferences;
+    public int[] preferences = new int[N];
     private int partnerId;
     private int proposalIndex = -1;
 
-    public Man(int id, int[] preferences) throws Exception {
+    public Man(int id) throws Exception {
         super();
         this.id = id;
-        this.preferences = preferences;
+        orderPreferences();
         this.partnerId = -1;
+
     }
 
     public int getId() {
@@ -30,6 +32,7 @@ public class Man extends UnicastRemoteObject implements manI {
     public void onResponse(String response, int womanId) throws RemoteException {
         if (response.equals("ACCEPT")) {
             this.partnerId = womanId;
+            Driver.trace("M" + id +" ENGAGED to W"+ womanId);
         } else if (response.equals("REJECT") || response.equals("DUMP")) {
             this.partnerId = -1;
             proposeNext();
@@ -58,6 +61,7 @@ public class Man extends UnicastRemoteObject implements manI {
         int wId = preferences[proposalIndex];
         try{
         womanI w = (womanI) Naming.lookup("rmi://localhost/Woman" + wId);
+        Driver.trace("M"+id+" -> W"+wId+" PROPOSE");
         String resp = w.onProposal(this.id);
         onResponse(resp, wId);
         }catch(Exception e){

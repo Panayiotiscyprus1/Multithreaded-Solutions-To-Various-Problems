@@ -6,11 +6,11 @@ import java.util.List;
 import java.rmi.Naming;
 
 public class Woman extends UnicastRemoteObject implements womanI {
-
+    final int N = Driver.N;
     private int id;
     private int partnerId;
-    private int[] preferences = new int[5];
-    private int[] rank = new int[5];
+    private int[] preferences = new int[N];
+    private int[] rank = new int[N];
 
     public Woman(int id) throws RemoteException {
         // export object
@@ -23,13 +23,13 @@ public class Woman extends UnicastRemoteObject implements womanI {
     // Generate random preference order and ranking
     public void orderPref() {
         List<Integer> men = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < N; i++) {
             men.add(i);
         }
 
         Collections.shuffle(men);
 
-        for (int pos = 0; pos < 5; pos++) {
+        for (int pos = 0; pos < N; pos++) {
             int manId = men.get(pos);
             preferences[pos] = manId;
             rank[manId] = pos;
@@ -40,20 +40,24 @@ public class Woman extends UnicastRemoteObject implements womanI {
 
         if (partnerId == -1) {
             partnerId = manId;
+            Driver.inc();
+            Driver.trace("W" + id + " accepts M" + manId);
             return "ACCEPT";
         }
 
         if (rank[manId] < rank[partnerId]) {
             try{
             manI old = (manI) Naming.lookup("rmi://localhost/Man" + partnerId);
+            Driver.trace("W"+ id + " DUMP M"+ partnerId +" (better M" + manId +")");
             old.onResponse("DUMP", this.id);
             }catch(Exception e){
                 e.printStackTrace();
             }
             partnerId = manId;
+            Driver.trace("W"+id+" ACCEPT M"+manId);
             return "ACCEPT";
         }
-
+        Driver.trace("W"+id+" REJECT M"+manId);
         return "REJECT";
     }
 
