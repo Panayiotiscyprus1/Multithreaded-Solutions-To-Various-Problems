@@ -3,6 +3,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.rmi.Naming;
 
 public class Woman extends UnicastRemoteObject implements womanI {
 
@@ -43,9 +44,12 @@ public class Woman extends UnicastRemoteObject implements womanI {
         }
 
         if (rank[manId] < rank[partnerId]) {
-            Man old = (Man)Naming.lookup(partnerId);
-            old.onResponse("DUMP");
-            
+            try{
+            manI old = (manI) Naming.lookup("rmi://localhost/Man" + partnerId);
+            old.onResponse("DUMP", this.id);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
             partnerId = manId;
             return "ACCEPT";
         }

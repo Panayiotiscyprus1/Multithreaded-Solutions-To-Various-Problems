@@ -2,6 +2,9 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.rmi.RemoteException;
+import java.rmi.Naming;
+import java.rmi.Remote;
 
 public class Man extends UnicastRemoteObject implements manI {
     public final int id;
@@ -24,7 +27,7 @@ public class Man extends UnicastRemoteObject implements manI {
         return this.partnerId;
     }
 
-    public void onResponse(String response, int womanId) {
+    public void onResponse(String response, int womanId) throws RemoteException {
         if (response.equals("ACCEPT")) {
             this.partnerId = womanId;
         } else if (response.equals("REJECT") || response.equals("DUMP")) {
@@ -49,9 +52,16 @@ public class Man extends UnicastRemoteObject implements manI {
         }
     }
 
-    public void proposeNext(){
+    public void proposeNext() throws RemoteException {
         proposalIndex++;
-        Woman current = (Woman)Naming.lookup(preferences(proposalIndex));
-        current.onProposal(this.id);
+        if (proposalIndex >= preferences.length) return; 
+        int wId = preferences[proposalIndex];
+        try{
+        womanI w = (womanI) Naming.lookup("rmi://localhost/Woman" + wId);
+        String resp = w.onProposal(this.id);
+        onResponse(resp, wId);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }
