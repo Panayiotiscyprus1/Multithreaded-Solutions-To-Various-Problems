@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Driver {
     public static int counter = 0;
-    public static final int N = 20;
+    public static final int N = 5;
     
     public static synchronized void trace(String s){
         System.out.println(s);
