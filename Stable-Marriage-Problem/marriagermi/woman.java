@@ -43,8 +43,11 @@ public class Woman extends UnicastRemoteObject implements womanI {
         }
 
         if (rank[manId] < rank[partnerId]) {
+            Man old = (Man)Naming.lookup(partnerId);
+            old.onResponse("DUMP");
+            
             partnerId = manId;
-            return "DUMP";
+            return "ACCEPT";
         }
 
         return "REJECT";
