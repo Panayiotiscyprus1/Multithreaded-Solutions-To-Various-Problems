@@ -10,7 +10,7 @@ public class Man extends UnicastRemoteObject implements manI {
     final int N = Driver.N;
     public final int id;
     public int[] preferences = new int[N];
-    private int partnerId;
+    private volatile int partnerId;
     private int proposalIndex = -1;
 
     public Man(int id) throws Exception {

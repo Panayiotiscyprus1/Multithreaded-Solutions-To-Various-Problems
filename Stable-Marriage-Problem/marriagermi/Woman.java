@@ -36,27 +36,38 @@ public class Woman extends UnicastRemoteObject implements womanI {
         }
     }
 
-    public synchronized String onProposal(int manId) throws RemoteException {
+    public String onProposal(int manId) throws RemoteException {
+        int oldToDump = -1;
+        boolean accept = false;
 
-        if (partnerId == -1) {
-            partnerId = manId;
-            Driver.inc();
-            Driver.trace("W" + id + " accepts M" + manId);
-            return "ACCEPT";
+        synchronized (this) {
+            if (partnerId == -1) {
+                partnerId = manId;
+                Driver.inc();
+                Driver.trace("W" + id + " accepts M" + manId);
+                accept = true;
+            }
+
+            else if (rank[manId] < rank[partnerId]) {
+                oldToDump = partnerId;
+                partnerId = manId;
+                Driver.trace("W"+id+" ACCEPT M"+manId);
+                accept = true;
+            }
         }
 
-        if (rank[manId] < rank[partnerId]) {
+        if (oldToDump != -1){
             try{
-            manI old = (manI) Naming.lookup("rmi://localhost/Man" + partnerId);
-            Driver.trace("W"+ id + " DUMP M"+ partnerId +" (better M" + manId +")");
-            old.onResponse("DUMP", this.id);
+                manI old = (manI) Naming.lookup("rmi://localhost/Man" + oldToDump);
+                Driver.trace("W"+ id + " DUMP M"+ oldToDump +" (better M" + manId +")");
+                old.onResponse("DUMP", this.id);
             }catch(Exception e){
                 e.printStackTrace();
             }
-            partnerId = manId;
-            Driver.trace("W"+id+" ACCEPT M"+manId);
-            return "ACCEPT";
         }
+
+        if (accept) return "ACCEPT";
+        
         Driver.trace("W"+id+" REJECT M"+manId);
         return "REJECT";
     }
