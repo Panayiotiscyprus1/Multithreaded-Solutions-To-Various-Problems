@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class woman extends UnicastRemoteObject implements womanI {
+public class Woman extends UnicastRemoteObject implements womanI {
 
     private int id;
     private int partnerId;
     private int[] preferences = new int[5];
     private int[] rank = new int[5];
 
-    public woman(int id) throws RemoteException {
+    public Woman(int id) throws RemoteException {
         // export object
         super();
         this.id = id;

@@ -3,12 +3,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class man extends UnicastRemoteObject implements manI {
+public class Man extends UnicastRemoteObject implements manI {
     public final int id;
     public final int[] preferences;
     private int partnerId;
+    private int proposalIndex = -1;
 
-    public man(int id, int[] preferences) throws Exception {
+    public Man(int id, int[] preferences) throws Exception {
         super();
         this.id = id;
         this.preferences = preferences;
@@ -28,6 +29,7 @@ public class man extends UnicastRemoteObject implements manI {
             this.partnerId = womanId;
         } else if (response.equals("REJECT") || response.equals("DUMP")) {
             this.partnerId = -1;
+            proposeNext();
         }
     }
 
@@ -45,5 +47,11 @@ public class man extends UnicastRemoteObject implements manI {
         for (int i = 0; i < preferences.length; i++) {
             preferences[i] = tempList.get(i);
         }
+    }
+
+    public void proposeNext(){
+        proposalIndex++;
+        Woman current = (Woman)Naming.lookup(preferences(proposalIndex));
+        current.onProposal(this.id);
     }
 }
