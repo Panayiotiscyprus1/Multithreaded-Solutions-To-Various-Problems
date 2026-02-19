@@ -17,6 +17,7 @@ public class Person extends Thread{
                 t.Done(target);
             }
         } catch (InterruptedException e) {
+            e.printStackTrace();
             // thread interrupted -> end
         }
     }
