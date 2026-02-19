@@ -29,7 +29,7 @@ public class Man extends UnicastRemoteObject implements manI {
         return this.partnerId;
     }
 
-    public void onResponse(String response, int womanId) throws RemoteException {
+    public synchronized void onResponse(String response, int womanId) throws RemoteException {
         if (response.equals("ACCEPT")) {
             this.partnerId = womanId;
             Driver.trace("M" + id +" ENGAGED to W"+ womanId);
@@ -55,7 +55,7 @@ public class Man extends UnicastRemoteObject implements manI {
         }
     }
 
-    public void proposeNext() throws RemoteException {
+    public synchronized void proposeNext() throws RemoteException {
         proposalIndex++;
         if (proposalIndex >= preferences.length) return; 
         int wId = preferences[proposalIndex];
